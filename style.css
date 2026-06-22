@@ -1,0 +1,251 @@
+/* Paleta Institucional y Reset */
+:root {
+    --gob-azul: #0033a0;
+    --gob-rojo: #ef3340;
+    --bg-light: #f7fafc;
+    --text-dark: #2d3748;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    background-color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+}
+
+/* Contenedor Smartphone */
+.smartphone-container {
+    background-color: var(--bg-light);
+    width: 100%;
+    max-width: 410px;
+    height: 840px;
+    border-radius: 32px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    border: 8px solid #2d3748;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Headers y Footers */
+.app-header {
+    background-color: white;
+    border-bottom: 1px solid #e2e8f0;
+}
+.gob-line {
+    height: 4px;
+    background: linear-gradient(to right, var(--gob-azul) 50%, var(--gob-rojo) 50%);
+}
+.header-content {
+    padding: 15px;
+    text-align: center;
+}
+.header-content h1 {
+    font-size: 1.1rem;
+    color: var(--gob-azul);
+    font-weight: 800;
+}
+.header-content p {
+    font-size: 0.65rem;
+    color: #718096;
+}
+
+.app-content {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Control de Pantallas SPA */
+.screen {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+}
+.screen.active {
+    display: flex;
+}
+
+/* Botones Principales */
+button {
+    transition: all 0.2s ease;
+}
+button:active {
+    transform: scale(0.98);
+}
+
+.btn-cu {
+    background-color: #ff6b00;
+    color: white;
+    font-weight: bold;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px rgba(255,107,0,0.2);
+}
+.btn-func {
+    background-color: #4a5568;
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+.form-group label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+.form-group input, .form-group select {
+    padding: 10px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: white;
+}
+.check-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin: 15px 0;
+}
+.check-group label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* Secciones Dinámicas */
+.hidden-fields {
+    background-color: #edf2f7;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+.hidden { display: none !important; }
+
+.sag-section-title {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #1b4d3e;
+    border-left: 3px solid #2ecc71;
+    padding-left: 6px;
+    margin-top: 15px;
+}
+.sag-alert-border {
+    border-left: 3px solid var(--gob-rojo);
+}
+
+/* Banners y Status */
+.status-box {
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+.status-box.loading {
+    background-color: #ebf8ff;
+    color: #2b6cb0;
+}
+.alert-banner {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* QR y Éxito */
+.success-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.success-icon {
+    font-size: 2.5rem;
+    color: #2ecc71;
+}
+.qr-container {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.qr-mock {
+    width: 140px;
+    height: 140px;
+    background-color: #2d3748;
+    margin: 0 auto 10px auto;
+}
+
+/* Caseta de Control */
+.scanner-box {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+.scanner-box input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+}
+.info-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.8rem;
+}
+.info-card p { margin-bottom: 6px; }
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.btn-action-approve {
+    flex: 1; background-color: #2ecc71; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;
+}
+.btn-action-reject {
+    flex: 1; background-color: #e74c3c; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;
+}
+.btn-submit {
+    background-color: var(--gob-azul); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer;
+}
+.btn-secondary {
+    background-color: #edf2f7; color: var(--text-dark); border: 1px solid #cbd5e0; padding: 10px; border-radius: 6px; cursor: pointer;
+}
+.app-footer {
+    padding: 10px; background-color: white; border-top: 1px solid #e2e8f0; text-align: center;
+}
+.btn-help {
+    background: none; border: none; color: var(--gob-azul); font-size: 0.7rem; cursor: pointer; text-decoration: underline;
+}
