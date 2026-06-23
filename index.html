@@ -10,9 +10,25 @@
 
     <div class="smartphone-container">
         
+        <div id="push-notification-box" class="push-notification hidden">
+            <div class="push-icon">🔔</div>
+            <div class="push-content">
+                <h4 id="push-title">Alerta del Sistema</h4>
+                <p id="push-message">Mensaje de notificación push.</p>
+            </div>
+            <button id="btn-close-push" class="push-close">&times;</button>
+        </div>
+        
         <header class="app-header">
             <div class="gob-line"></div>
+            <div id="top-loading-bar" class="top-loading-bar hidden"></div>
+            
             <div class="header-content">
+                <div class="theme-toggle-container">
+                    <button id="btn-theme-toggle" class="btn-theme-toggle" aria-label="Cambiar tema">
+                        <span id="theme-toggle-icon">🌙</span> Módulo Nocturno
+                    </button>
+                </div>
                 <h1>Aduanas de Chile</h1>
                 <p>Sistema de Modernización y Agilización Aduanera (SMAA)</p>
             </div>
@@ -22,27 +38,134 @@
             
             <section id="screen-login" class="screen active">
                 <div class="welcome-box">
-                    <h2>Bienvenido al Control Fronterizo</h2>
-                    <p>Seleccione su método de acceso para iniciar el trámite, la fiscalización o revisar estadísticas.</p>
+                    <h2>Sistema de Control Fronterizo</h2>
+                    <p>Seleccione su perfil e ingrese sus credenciales para acceder al SMAA.</p>
                 </div>
                 
-                <button id="btn-claveunica" class="btn-cu">
-                    <span class="cu-icon">🔑</span> Iniciar como Ciudadano
-                </button>
-                
-                <div style="margin: 15px 0; text-align: center; color: #aaa; font-size: 0.8rem;">— PERFILES DE GESTIÓN FRONTERIZA —</div>
+                <div class="auth-tabs">
+                    <button id="tab-ciudadano" class="auth-tab active">Ciudadano</button>
+                    <button id="tab-institucional" class="auth-tab">Funcionario</button>
+                </div>
 
-                <button id="btn-funcionario" class="btn-func">
-                    <span class="cu-icon">👤</span> Ingreso Funcionario (Caseta)
-                </button>
+                <div id="form-auth-ciudadano" class="auth-form-container">
+                    <div class="cu-banner">
+                        <span class="cu-logo-mock">ClaveÚnica</span>
+                        <p>Dep. de Tecnologías de la Información</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-rut-cu">RUT</label>
+                        <input type="text" id="login-rut-cu" placeholder="12345678-K" maxlength="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-pass-cu">ClaveÚnica</label>
+                        <div class="input-password-wrapper">
+                            <input type="password" id="login-pass-cu" placeholder="••••••••">
+                            <button type="button" class="btn-toggle-password" data-target="login-pass-cu">👁️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group check-group flex-row justify-between">
+                        <div class="flex-align-center">
+                            <input type="checkbox" id="remember-rut">
+                            <label for="remember-rut" style="margin-bottom:0; font-size:0.75rem; color:var(--text-muted);">Recordar mi RUT</label>
+                        </div>
+                    </div>
 
-                <button id="btn-director" class="btn-dir" style="background-color: #2b6cb0; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;">
-                    <span class="cu-icon">📊</span> Panel Directivo y Estadísticas
-                </button>
+                    <button id="btn-submit-cu" class="btn-cu">
+                        🔑 Iniciar sesión con ClaveÚnica
+                    </button>
+                </div>
+
+                <div id="form-auth-institucional" class="auth-form-container hidden">
+                    <div class="cu-banner corporate-banner">
+                        <span class="cu-logo-mock">Aduanas Chile</span>
+                        <p>Autenticación de Operadores e Inspectores</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-id-inst">ID de Funcionario / Código Operador</label>
+                        <input type="text" id="login-id-inst" placeholder="Ej: ADU-9482" maxlength="12">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-pass-inst">PIN / Clave de Seguridad</label>
+                        <div class="input-password-wrapper">
+                            <input type="password" id="login-pass-inst" placeholder="••••••••">
+                            <button type="button" class="btn-toggle-password" data-target="login-pass-inst">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-perfil-inst">Rol de Gestión</label>
+                        <select id="login-perfil-inst">
+                            <option value="funcionario">Fiscalizador de Caseta</option>
+                            <option value="director">Director / Panel de Control KPIs</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group check-group">
+                        <input type="checkbox" id="remember-id">
+                        <label for="remember-id" style="margin-bottom:0; font-size:0.75rem; color:var(--text-muted);">Recordar Credenciales</label>
+                    </div>
+
+                    <button id="btn-submit-inst" class="btn-func">
+                        👤 Verificar Credenciales Internas
+                    </button>
+                </div>
                 
                 <div class="help-section">
-                    <small>¿Extranjero? <a href="#">Solicite acceso temporal</a></small>
+                    <small>¿Extranjero sin RUT? <a href="#" id="link-extranjero">Solicite acceso temporal</a></small>
                 </div>
+            </section>
+
+            <section id="screen-extranjero" class="screen">
+                <h2>Acceso Temporal Extranjeros</h2>
+                <p class="subtitle">Registro para vehículos no matriculados en Chile o conductores internacionales</p>
+                
+                <form id="smaa-form-extranjero">
+                    <div class="form-group">
+                        <label for="ext-documento">N° Pasaporte / ID País Origen</label>
+                        <input type="text" id="ext-documento" required placeholder="Ej: A12345678">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ext-pais">País de Residencia</label>
+                        <select id="ext-pais" required>
+                            <option value="">Seleccione país...</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Bolivia">Bolivia</option>
+                            <option value="Perú">Perú</option>
+                            <option value="Brasil">Brasil</option>
+                            <option value="Otro">Otro País</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ext-patente">Patente Internacional / Origen</label>
+                        <input type="text" id="ext-patente" required placeholder="Ej: AA123BB (Formato Origen)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ext-marca">Marca</label>
+                        <input type="text" id="ext-marca" required placeholder="Ej: Ford">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ext-modelo">Modelo</label>
+                        <input type="text" id="ext-modelo" required placeholder="Ej: Ranger">
+                    </div>
+
+                    <div class="sag-section-title">Declaración Obligatoria SAG / ADUANA</div>
+                    <div class="form-group check-group">
+                        <input type="checkbox" id="ext-sag" name="ext-sag">
+                        <label for="ext-sag">¿Ingresa mercancías, alimentos o vegetales?</label>
+                    </div>
+
+                    <div id="api-status-ext" class="status-box hidden"></div>
+
+                    <div class="action-buttons">
+                        <button type="button" id="btn-cancel-ext" class="btn-secondary">Volver</button>
+                        <button type="submit" class="btn-submit">Registrar Ingreso</button>
+                    </div>
+                </form>
             </section>
 
             <section id="screen-form" class="screen">
@@ -53,12 +176,13 @@
                     <div class="form-group">
                         <label for="rut">RUT Propietario</label>
                         <input type="text" id="rut" required placeholder="12345678-K" maxlength="10">
-                        <small id="rut-error" style="color: #ef3340; font-size: 0.75rem; display: none; margin-top: 4px;">⚠️ RUT inválido (ingrese sin puntos y con guión)</small>
+                        <small id="rut-error" class="error-text">⚠️ RUT inválido (ingrese sin puntos y con guión)</small>
                     </div>
 
                     <div class="form-group">
                         <label for="patente">Patente del Vehículo</label>
-                        <input type="text" id="patente" required placeholder="ABCD12 o AB1234" maxlength="6" style="text-transform: uppercase;">
+                        <input type="text" id="patente" required placeholder="ABCD12 o AB1234" maxlength="6">
+                        <small id="patente-error" class="error-text">⚠️ Formato de patente inválido (Debe ser AA1111 o BBBB11)</small>
                     </div>
 
                     <div class="form-group">
@@ -94,7 +218,7 @@
                     </div>
 
                     <div id="section-sag-detalle" class="hidden-fields hidden sag-alert-border">
-                        <label class="help-text" style="font-weight:bold; color:#d63031; display:block; margin-bottom:8px;">
+                        <label class="sag-warning-label">
                             ⚠️ ATENCIÓN: Pasará obligatoriamente a revisión física en el andén del SAG.
                         </label>
                         <div class="form-group">
@@ -109,7 +233,10 @@
 
                     <div id="api-status" class="status-box hidden"></div>
 
-                    <button type="submit" id="btn-submit-form" class="btn-submit">Sincronizar y Validar Datos</button>
+                    <div class="action-buttons">
+                        <button type="button" id="btn-cancel-form" class="btn-secondary">Volver</button>
+                        <button type="submit" id="btn-submit-form" class="btn-submit">Sincronizar Datos</button>
+                    </div>
                 </form>
             </section>
 
@@ -120,8 +247,8 @@
                     <p>Datos validados con Registro Civil, PDI y SAG.</p>
                 </div>
 
-                <div class="qr-container">
-                    <div class="qr-code">
+                <div class="qr-wrapper">
+                    <div class="qr-code-box">
                         <div class="qr-mock"></div>
                     </div>
                     <p class="qr-code-text">ID Folio: <span id="folio-id">000000</span></p>
@@ -130,22 +257,22 @@
                 <button id="btn-restart" class="btn-secondary">Volver al Inicio</button>
             </section>
 
-            <section id="screen-dashboard" class="screen" style="overflow-y: auto; max-height: 80vh;">
+            <section id="screen-dashboard" class="screen scrollable-screen">
                 <div class="dashboard-header">
                     <h2>Módulo de Fiscalización</h2>
                     <span class="badge">Caseta Activa</span>
                 </div>
 
                 <div class="scanner-box">
-                    <input type="text" id="search-folio" placeholder="Escriba ID Folio (Ej: SMAA-123456)">
-                    <button id="btn-search" class="btn-submit">Buscar Trámite</button>
+                    <input type="text" id="search-folio" placeholder="Buscar por Folio, RUT o Patente...">
+                    <button id="btn-search" class="btn-submit">Buscar</button>
                 </div>
 
                 <div id="panel-tramite-detalle" class="hidden">
                     <div class="info-card">
                         <h3>Detalles de Fiscalización</h3>
                         <p><strong>Folio:</strong> <span id="view-folio">-</span></p>
-                        <p><strong>RUT Propietario:</strong> <span id="view-rut">-</span></p>
+                        <p><strong>Documento/RUT:</strong> <span id="view-rut" class="masked-data">-</span></p>
                         <p><strong>Patente:</strong> <span id="view-patente">-</span></p>
                         <p><strong>Vehículo:</strong> <span id="view-vehiculo">-</span></p>
                         <p><strong>¿Lleva Menores?:</strong> <span id="view-menores">-</span></p>
@@ -154,12 +281,16 @@
                             <strong>Declaración SAG:</strong> <span id="view-sag-status">-</span>
                         </div>
                         
-                        <div id="dashboard-pdi-alert" class="alert-banner hidden" style="background-color: #ef3340; border-color: #cc242e; color: white;">
-                            🚨 ALERTA PDI: El propietario del vehículo presenta ORDEN DE ARRAIGO VIGENTE. Detener despacho.
+                        <div id="dashboard-pdi-alert" class="alert-banner alert-danger hidden">
+                            🚨 ALERTA PDI: El propietario presenta ORDEN DE ARRAIGO VIGENTE.
                         </div>
 
-                        <div id="dashboard-clone-alert" class="alert-banner hidden" style="background-color: #ffe3e3; border-color: #e53e3e; color: #c53030;">
-                            ⚠️ CRÍTICO: Esta patente ya cruzó la frontera en un registro aprobado previo hoy. Posible vehículo clonado.
+                        <div id="dashboard-stolen-alert" class="alert-banner alert-danger hidden">
+                            🚔 SEBV CARABINEROS: Vehículo con ENCARGO POR ROBO activo.
+                        </div>
+
+                        <div id="dashboard-clone-alert" class="alert-banner alert-warning hidden">
+                            ⚠️ ADUANA: Esta patente ya registra un cruce aprobado el día de hoy (Posible Clonación).
                         </div>
                     </div>
 
@@ -169,86 +300,117 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 20px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
-                    <h4 id="total-vehiculos" style="margin: 0 0 10px 0; font-size: 0.85rem; color: #4a5568;">Últimos Procesados en Turno</h4>
-                    <div style="max-height: 150px; overflow-y: auto;">
-                        <table style="width: 100%; font-size: 0.75rem; border-collapse: collapse; text-align: left;">
+                <div class="audit-log-container">
+                    <h4 id="total-vehiculos">Historial del Turno</h4>
+                    <div class="audit-table-wrapper">
+                        <table class="audit-table">
                             <thead>
-                                <tr style="border-bottom: 2px solid #edf2f7; color: #718096;">
-                                    <th style="padding: 4px;">Folio</th>
-                                    <th style="padding: 4px;">Patente</th>
-                                    <th style="padding: 4px; text-align: right;">Estado</th>
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Patente</th>
+                                    <th class="text-right">Estado</th>
                                 </tr>
                             </thead>
                             <tbody id="table-audit-logs">
                                 <tr>
-                                    <td colspan="3" style="text-align: center; color: #aaa; padding: 10px;">Ningún vehículo procesado en este turno.</td>
+                                    <td colspan="3" class="text-center text-muted">Ningún vehículo procesado.</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <button id="btn-logout-dashboard" class="btn-secondary" style="margin-top: 20px; width: 100%;">Cerrar Sesión</button>
+                <button id="btn-logout-dashboard" class="btn-secondary margin-top-auto">Cerrar Sesión</button>
             </section>
 
             <section id="screen-director" class="screen">
                 <div class="dashboard-header">
                     <h2>Indicadores de Gestión</h2>
-                    <span class="badge" style="background-color: #feebc8; color: #c05621;">Nivel Central</span>
+                    <span class="badge badge-orange">Nivel Central</span>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
-                    <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center;">
-                        <div style="font-size: 0.75rem; color: #718096; font-weight: bold;">Vehículos Procesados</div>
-                        <div id="kpi-total-forms" style="font-size: 1.4rem; font-weight: bold; color: #0033a0;">0</div>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-title">Vehículos Procesados</div>
+                        <div id="kpi-total-forms" class="kpi-value text-blue">0</div>
                     </div>
-                    <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center;">
-                        <div style="font-size: 0.75rem; color: #718096; font-weight: bold;">Alertas Críticas PDI</div>
-                        <div id="kpi-total-alerts" style="font-size: 1.4rem; font-weight: bold; color: #ef3340;">0</div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">Alertas Críticas PDI</div>
+                        <div id="kpi-total-alerts" class="kpi-value text-red">0</div>
                     </div>
-                    <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center;">
-                        <div style="font-size: 0.75rem; color: #718096; font-weight: bold;">Inspecciones SAG</div>
-                        <div id="kpi-total-sag" style="font-size: 1.4rem; font-weight: bold; color: #1b4d3e;">0</div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">Inspecciones SAG</div>
+                        <div id="kpi-total-sag" class="kpi-value text-green">0</div>
                     </div>
-                    <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center;">
-                        <div style="font-size: 0.75rem; color: #718096; font-weight: bold;">Ahorro Promedio</div>
-                        <div id="kpi-time-saved" style="font-size: 1.4rem; font-weight: bold; color: #2ecc71;">0 min</div>
+                    <div class="kpi-card">
+                        <div class="kpi-title">Ahorro Promedio</div>
+                        <div id="kpi-time-saved" class="kpi-value text-emerald">0 min</div>
                     </div>
                 </div>
 
-                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-top: 15px;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 0.85rem; color: #4a5568;">Estado de Despachos en Caseta</h4>
+                <div class="director-progress-box">
+                    <h4>Estado de Despachos en Caseta</h4>
                     
-                    <div style="margin-bottom: 8px;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #4a5568;">
+                    <div class="progress-group">
+                        <div class="progress-labels">
                             <span>Despachados (Aprobados)</span>
-                            <span id="txt-count-approved" style="font-weight: bold;">0</span>
+                            <span id="txt-count-approved" class="font-bold">0</span>
                         </div>
-                        <div style="background: #edf2f7; border-radius: 4px; height: 12px; width: 100%; margin-top: 4px; overflow: hidden;">
-                            <div id="bar-approved" style="background: #2ecc71; height: 100%; width: 0%; transition: width 0.5s ease-in-out;"></div>
+                        <div class="progress-bar-container">
+                            <div id="bar-approved" class="progress-bar bar-green"></div>
                         </div>
                     </div>
 
-                    <div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #4a5568;">
+                    <div class="progress-group">
+                        <div class="progress-labels">
                             <span>Rechazados</span>
-                            <span id="txt-count-rejected" style="font-weight: bold;">0</span>
+                            <span id="txt-count-rejected" class="font-bold">0</span>
                         </div>
-                        <div style="background: #edf2f7; border-radius: 4px; height: 12px; width: 100%; margin-top: 4px; overflow: hidden;">
-                            <div id="bar-rejected" style="background: #e74c3c; height: 100%; width: 0%; transition: width 0.5s ease-in-out;"></div>
+                        <div class="progress-bar-container">
+                            <div id="bar-rejected" class="progress-bar bar-red"></div>
                         </div>
                     </div>
                 </div>
 
-                <button id="btn-logout-director" class="btn-secondary" style="margin-top: 20px; width: 100%;">Cerrar Sesión</button>
+                <button id="btn-logout-director" class="btn-secondary margin-top-auto">Cerrar Sesión</button>
             </section>
 
         </main>
 
         <footer class="app-footer">
-            <button class="btn-help">¿Necesitas ayuda? Preguntas Frecuentes</button>
+            <button id="btn-help-modal" class="btn-help">¿Necesitas ayuda? Preguntas Frecuentes</button>
         </footer>
+    </div>
+
+    <div id="modal-faq" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Centro de Soporte SMAA</h3>
+                <button id="btn-close-faq" class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="faq-search" placeholder="Buscar solución (ej: SAG, Menores)...">
+                
+                <div class="faq-container">
+                    <div class="faq-item" data-keywords="sag aduana alimentos vegetales animales">
+                        <div class="faq-trigger">¿Qué pasa si declaro productos en el SAG? <span>+</span></div>
+                        <div class="faq-response"><p>Su trámite será derivado automáticamente al andén de inspección física. Declarar evita multas graves y agiliza el control fronterizo.</p></div>
+                    </div>
+                    <div class="faq-item" data-keywords="menores autorizacion notarial hijos padres">
+                        <div class="faq-trigger">¿Qué documentos exigen para menores? <span>+</span></div>
+                        <div class="faq-response"><p>Si el menor viaja sin uno de sus padres, el sistema exige cargar el PDF de la autorización notarial o la libreta de familia correspondiente, validada con PDI.</p></div>
+                    </div>
+                    <div class="faq-item" data-keywords="patente formato clonacion error">
+                        <div class="faq-trigger">Mi patente aparece rechazada o duplicada <span>+</span></div>
+                        <div class="faq-response"><p>El sistema cuenta con un control anti-clonaciones en tiempo real. Si la patente ya registra un cruce activo hoy, la caseta del funcionario bloqueará el despacho automático por seguridad.</p></div>
+                    </div>
+                    <div class="faq-item" data-keywords="extranjero pasaporte matricula internacional">
+                        <div class="faq-trigger">¿Cómo opera el ingreso de extranjeros? <span>+</span></div>
+                        <div class="faq-response"><p>Deben usar el enlace inferior "Solicite acceso temporal" e ingresar su N° de pasaporte y patente internacional para generar un folio transitorio de control.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
