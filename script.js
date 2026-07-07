@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const screenQr = document.getElementById('screen-qr');
     const screenDashboard = document.getElementById('screen-dashboard');
     const screenDirector = document.getElementById('screen-director');
+    const screenRevisar = document.getElementById('screen-revisar');
 
     // Botones de Navegación y Auth
     const linkExtranjero = document.getElementById('link-extranjero');
@@ -51,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnRestart = document.getElementById('btn-restart');
     const btnCancelForm = document.getElementById('btn-cancel-form');
     const btnCancelExt = document.getElementById('btn-cancel-ext');
+    const btnRevisarFormularios = document.getElementById('btn-revisar-formularios');
+    const btnLogoutRevisar = document.getElementById('btn-logout-revisar');
 
     // Componentes del Modal FAQ
     const btnHelpModal = document.getElementById('btn-help-modal');
@@ -75,6 +78,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkboxSag = document.getElementById('sag-declaracion');
     const sectionSagDetalle = document.getElementById('section-sag-detalle');
     const selectSagTipo = document.getElementById('sag-tipo');
+    
+    // Papeles del Vehículo
+    const checkboxTieneInformeTec = document.getElementById('tiene-informe-tec');
+    const sectionInformeTec = document.getElementById('section-informe-tec');
+    const docCertificado = document.getElementById('doc-certificado');
+    const docPermiso = document.getElementById('doc-permiso');
+    const docSeguro = document.getElementById('doc-seguro');
+    const docInformeTec = document.getElementById('doc-informe-tec');
+    
+    // Papeles de Extranjeros
+    const extDocCertificado = document.getElementById('ext-doc-certificado');
+    const extDocPermiso = document.getElementById('ext-doc-permiso');
+    const extDocSeguro = document.getElementById('ext-doc-seguro');
+    
+    // Declaración SAG de Extranjeros
+    const checkboxExtSag = document.getElementById('ext-sag');
+    const sectionExtSagDetalle = document.getElementById('section-ext-sag-detalle');
+    const selectExtSagTipo = document.getElementById('ext-sag-tipo');
 
     // Operativa de la Caseta
     const inputSearchFolio = document.getElementById('search-folio');
@@ -86,9 +107,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentFolioEnEvaluacion = null;
 
+    // --- CREAR DATOS DE EJEMPLO PARA DEMOSTRACIÓN ---
+    function crearDatosDeEjemplo() {
+        // Verificar si ya existen datos de ejemplo para evitar duplicados
+        if (localStorage.getItem('ejemplos-creados') === 'true') return;
+
+        const ejemplos = [
+            {
+                idFolio: "SMAA-234567",
+                rutPropietario: "18765432-5",
+                patente: "BC1234",
+                patenteVisual: "BC1234",
+                marca: "Hyundai",
+                modelo: "Tucson",
+                llevaMenores: "No",
+                declaracionSag: "SÍ DECLARA - Tipo: Vegetal | Descripción: 30 kg de sandías de Ica, marca local",
+                papeles: { certificado: "Registro_Hyundai.pdf", permiso: "Permiso_Circulación.pdf", seguro: "SOAP_Vigente.pdf" },
+                estado: "En Espera de Revisión",
+                fechaRegistro: "14:32:15"
+            },
+            {
+                idFolio: "SMAA-345678",
+                rutPropietario: "19234567-8",
+                patente: "XY5678",
+                patenteVisual: "XY5678",
+                marca: "Chevrolet",
+                modelo: "Onix",
+                llevaMenores: "Sí",
+                declaracionSag: "Nada que declarar",
+                papeles: { certificado: "Registro_Chevrolet.pdf", permiso: "Permiso_Circulación.pdf", seguro: "SOAP_Vigente.pdf" },
+                estado: "En Espera de Revisión",
+                fechaRegistro: "14:45:22"
+            },
+            {
+                idFolio: "SMAA-EXT-456789",
+                rutPropietario: "PA12345678",
+                patente: "ABC123",
+                patenteVisual: "ABC123 (Argentina)",
+                marca: "Ford",
+                modelo: "Ranger",
+                llevaMenores: "No",
+                declaracionSag: "SÍ DECLARA - Control Físico",
+                papeles: { certificado: "Registro_Internacional.pdf", permiso: "Permiso_Origen.pdf", seguro: "Cobertura_Internacional.pdf" },
+                estado: "En Espera de Revisión",
+                fechaRegistro: "15:10:45"
+            }
+        ];
+
+        ejemplos.forEach(ejemplo => {
+            localStorage.setItem(ejemplo.idFolio, JSON.stringify(ejemplo));
+        });
+
+        localStorage.setItem('ejemplos-creados', 'true');
+    }
+
+    // Crear datos de ejemplo al cargar
+    crearDatosDeEjemplo();
+
     // --- MANEJO DE PANTALLAS SPA ---
     function switchScreen(targetScreen) {
-        [screenLogin, screenForm, screenExtranjero, screenQr, screenDashboard, screenDirector].forEach(s => {
+        [screenLogin, screenForm, screenExtranjero, screenQr, screenDashboard, screenDirector, screenRevisar].forEach(s => {
             s.classList.remove('active');
         });
         targetScreen.classList.add('active');
@@ -119,139 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }, delay);
     }
 
-    // --- SISTEMA DE AUTENTICACIÓN MEJORADO Y PERSISTENTE ---
-    const tabCiudadano = document.getElementById('tab-ciudadano');
-    const tabInstitucional = document.getElementById('tab-institucional');
-    const formAuthCiudadano = document.getElementById('form-auth-ciudadano');
-    const formAuthInstitucional = document.getElementById('form-auth-institucional');
+    // --- SISTEMA DE AUTENTICACIÓN SIMPLE ---
+    const btnAccederSimple = document.getElementById('btn-acceder-simple');
+    const loginNombre = document.getElementById('login-nombre');
 
-    const loginRutCu = document.getElementById('login-rut-cu');
-    const loginIdInst = document.getElementById('login-id-inst');
-    const chkRememberRut = document.getElementById('remember-rut');
-    const chkRememberId = document.getElementById('remember-id');
-
-    // Cargar credenciales recordadas
-    if (localStorage.getItem('saved-rut')) {
-        loginRutCu.value = localStorage.getItem('saved-rut');
-        if(chkRememberRut) chkRememberRut.checked = true;
-    }
-    if (localStorage.getItem('saved-id')) {
-        loginIdInst.value = localStorage.getItem('saved-id');
-        if(chkRememberId) chkRememberId.checked = true;
-    }
-
-    if (tabCiudadano && tabInstitucional) {
-        tabCiudadano.addEventListener('click', () => {
-            tabCiudadano.classList.add('active');
-            tabInstitucional.classList.remove('active');
-            formAuthCiudadano.classList.remove('hidden');
-            formAuthInstitucional.classList.add('hidden');
-        });
-
-        tabInstitucional.addEventListener('click', () => {
-            tabInstitucional.classList.add('active');
-            tabCiudadano.classList.remove('active');
-            formAuthInstitucional.classList.remove('hidden');
-            formAuthCiudadano.classList.add('hidden');
-        });
-    }
-
-    // Botones para alternar visibilidad de contraseña (Ojo 👁️)
-    document.querySelectorAll('.btn-toggle-password').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
-            const inputTarget = document.getElementById(targetId);
-            if (inputTarget) {
-                if (inputTarget.type === 'password') {
-                    inputTarget.type = 'text';
-                    btn.innerText = '🙈';
-                } else {
-                    inputTarget.type = 'password';
-                    btn.innerText = '👁️';
-                }
-            }
-        });
-    });
-
-    // Formateador automático para el RUT de Login
-    if (loginRutCu) {
-        loginRutCu.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/[^0-9kK]/g, '');
-            if (value.length > 1) { value = value.slice(0, -1) + '-' + value.slice(-1); }
-            e.target.value = value.toLowerCase();
-        });
-    }
-
-    // Procesar Login Ciudadano (ClaveÚnica)
-    const btnSubmitCu = document.getElementById('btn-submit-cu');
-    if (btnSubmitCu) {
-        btnSubmitCu.addEventListener('click', () => {
-            const r = loginRutCu.value;
-            const p = document.getElementById('login-pass-cu').value;
-
-            if (!r || !p) {
-                alert("⚠️ Por favor, complete su RUT y su ClaveÚnica.");
-                return;
-            }
-            if (!validarRutChileno(r)) {
-                alert("⚠️ El RUT ingresado no cumple las reglas de validación.");
-                return;
-            }
-
-            // Guardado o borrado de sesión persistente
-            if (chkRememberRut && chkRememberRut.checked) {
-                localStorage.setItem('saved-rut', r);
-            } else {
-                localStorage.removeItem('saved-rut');
-            }
-
-            if (inputRut) {
-                inputRut.value = r;
-                rutError.style.display = 'none';
-            }
-
-            switchScreenWithLoader(screenForm, 850);
-            document.getElementById('login-pass-cu').value = '';
-        });
-    }
-
-    // Procesar Login Funcionario Corporativo (ID Operador)
-    const btnSubmitInst = document.getElementById('btn-submit-inst');
-    if (btnSubmitInst) {
-        btnSubmitInst.addEventListener('click', () => {
-            const fid = loginIdInst.value.trim().toUpperCase();
-            const pass = document.getElementById('login-pass-inst').value;
-            const rol = document.getElementById('login-perfil-inst').value;
-
-            if (!fid || !pass) {
-                alert("⚠️ Ingrese su ID de Funcionario y Clave Corporativa.");
-                return;
-            }
-
-            // Regla de negocio simulada: El ID de aduanas corporativo debe iniciar con ADU-
-            if (!fid.startsWith('ADU-')) {
-                alert("⚠️ Código inválido. Las credenciales de operador deben iniciar con el prefijo institucional 'ADU-' (Ej: ADU-1234).");
-                return;
-            }
-
-            // Guardado persistente
-            if (chkRememberId && chkRememberId.checked) {
-                localStorage.setItem('saved-id', fid);
-            } else {
-                localStorage.removeItem('saved-id');
-            }
-
-            if (rol === 'funcionario') {
-                switchScreenWithLoader(screenDashboard, 950);
-                if (panelTramiteDetalle) panelTramiteDetalle.classList.add('hidden');
-                if (inputSearchFolio) inputSearchFolio.value = '';
-                cargarTablaAuditoria();
-            } else if (rol === 'director') {
-                switchScreenWithLoader(screenDirector, 1200);
-                calcularMetricasDirectivas();
-            }
-
-            document.getElementById('login-pass-inst').value = '';
+    if (btnAccederSimple) {
+        btnAccederSimple.addEventListener('click', () => {
+            switchScreenWithLoader(screenForm, 600);
         });
     }
 
@@ -262,6 +214,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnRestart) btnRestart.addEventListener('click', () => switchScreenWithLoader(screenLogin, 400));
     if (btnLogoutDashboard) btnLogoutDashboard.addEventListener('click', () => switchScreenWithLoader(screenLogin, 400));
     if (btnLogoutDirector) btnLogoutDirector.addEventListener('click', () => switchScreenWithLoader(screenLogin, 400));
+    if (btnRevisarFormularios) {
+        btnRevisarFormularios.addEventListener('click', () => {
+            switchScreenWithLoader(screenRevisar, 500);
+            cargarFormulariosPendientes();
+        });
+    }
+    if (btnLogoutRevisar) btnLogoutRevisar.addEventListener('click', () => switchScreenWithLoader(screenLogin, 400));
 
     // --- CONTROL MODAL FAQ ---
     if (btnHelpModal) btnHelpModal.addEventListener('click', () => modalFaq.classList.remove('hidden'));
@@ -345,25 +304,77 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Verifique que el RUT y Patente estén bien escritos.");
                 return;
             }
-            procesarGuardadoFormulario(inputRut.value, inputPatente.value, document.getElementById('marca').value, document.getElementById('modelo').value, checkboxMenores.checked ? "Sí" : "No", checkboxSag.checked ? `SÍ DECLARA - Tipo: ${selectSagTipo.value}` : "Nada que declarar", apiStatus);
+            
+            // Validar que los archivos requeridos estén cargados
+            if (!docCertificado.files.length) {
+                alert("⚠️ Debe adjuntar el Certificado de Registro.");
+                return;
+            }
+            if (!docPermiso.files.length) {
+                alert("⚠️ Debe adjuntar el Permiso de Circulación.");
+                return;
+            }
+            if (!docSeguro.files.length) {
+                alert("⚠️ Debe adjuntar el Seguro Obligatorio (SOAP).");
+                return;
+            }
+            if (checkboxTieneInformeTec.checked && !docInformeTec.files.length) {
+                alert("⚠️ Debe adjuntar el Informe Técnico seleccionado.");
+                return;
+            }
+
+            const papelesCargados = {
+                certificado: docCertificado.files[0].name,
+                permiso: docPermiso.files[0].name,
+                seguro: docSeguro.files[0].name,
+                informeTecnico: checkboxTieneInformeTec.checked ? docInformeTec.files[0].name : "No aplica"
+            };
+
+            const descSag = document.getElementById('sag-descripcion');
+            const textoSag = checkboxSag.checked ? `SÍ DECLARA - Tipo: ${selectSagTipo.value} | Descripción: ${descSag.value || "Sin especificar"}` : "Nada que declarar";
+
+            procesarGuardadoFormulario(inputRut.value, inputPatente.value, document.getElementById('marca').value, document.getElementById('modelo').value, checkboxMenores.checked ? "Sí" : "No", textoSag, apiStatus, false, papelesCargados);
         });
     }
 
     if (smaaFormExtranjero) {
         smaaFormExtranjero.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Validar que los archivos requeridos estén cargados
+            if (!extDocCertificado.files.length) {
+                alert("⚠️ Debe adjuntar el Certificado de Registro.");
+                return;
+            }
+            if (!extDocPermiso.files.length) {
+                alert("⚠️ Debe adjuntar el Permiso de Circulación.");
+                return;
+            }
+            if (!extDocSeguro.files.length) {
+                alert("⚠️ Debe adjuntar la Póliza de Seguro/Cobertura Internacional.");
+                return;
+            }
+            
             const documento = document.getElementById('ext-documento').value.toUpperCase().trim();
             const patenteExt = document.getElementById('ext-patente').value.toUpperCase().trim();
             const marca = document.getElementById('ext-marca').value;
             const modelo = document.getElementById('ext-modelo').value;
             const pais = document.getElementById('ext-pais').value;
-            const declaraSag = document.getElementById('ext-sag').checked ? "SÍ DECLARA - Control Físico" : "Nada que declarar";
+            
+            const descExtSag = document.getElementById('ext-sag-descripcion');
+            const textoExtSag = checkboxExtSag.checked ? `SÍ DECLARA - Tipo: ${selectExtSagTipo.value} | Descripción: ${descExtSag.value || "Sin especificar"}` : "Nada que declarar";
 
-            procesarGuardadoFormulario(documento, `${patenteExt} (${pais})`, marca, modelo, "No (Extranjero)", declaraSag, apiStatusExt, true);
+            const papelesCargados = {
+                certificado: extDocCertificado.files[0].name,
+                permiso: extDocPermiso.files[0].name,
+                seguro: extDocSeguro.files[0].name
+            };
+
+            procesarGuardadoFormulario(documento, `${patenteExt} (${pais})`, marca, modelo, "No (Extranjero)", textoExtSag, apiStatusExt, true, papelesCargados);
         });
     }
 
-    function procesarGuardadoFormulario(documento, patente, marca, modelo, menores, sag, spinnerElement, esExtranjero = false) {
+    function procesarGuardadoFormulario(documento, patente, marca, modelo, menores, sag, spinnerElement, esExtranjero = false, papeles = null) {
         spinnerElement.classList.remove('hidden');
         spinnerElement.className = "status-box loading";
         spinnerElement.innerHTML = `<div class="spinner"></div><p class="spinner-text">Validando Base de Datos...</p>`;
@@ -381,7 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 modelo: modelo,
                 llevaMenores: menores,
                 declaracionSag: sag,
-                estado: "Pendiente",
+                papeles: papeles || null,
+                estado: "En Espera de Revisión",
                 fechaRegistro: new Date().toLocaleTimeString()
             };
 
@@ -399,6 +411,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if(smaaFormExtranjero) smaaFormExtranjero.reset();
             sectionMenoresDetalle.classList.add('hidden');
             sectionSagDetalle.classList.add('hidden');
+            sectionExtSagDetalle.classList.add('hidden');
+            sectionInformeTec.classList.add('hidden');
         }, 1200);
     }
 
@@ -560,11 +574,96 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('bar-rejected').style.width = totalEv > 0 ? `${(re / totalEv) * 100}%` : '0%';
     }
 
+    function cargarFormulariosPendientes() {
+        const panelPendientes = document.getElementById('panel-formularios-pendientes');
+        const panelSin = document.getElementById('panel-sin-formularios');
+        const listaFormularios = document.getElementById('lista-formularios');
+
+        let formulariosPendientes = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const clave = localStorage.key(i);
+            if (clave && (clave.includes("SMAA-") || clave.includes("SMAA-EXT-"))) {
+                const formulario = JSON.parse(localStorage.getItem(clave));
+                if (formulario.estado === "En Espera de Revisión") {
+                    formulariosPendientes.push(formulario);
+                }
+            }
+        }
+
+        if (formulariosPendientes.length === 0) {
+            panelPendientes.classList.add('hidden');
+            panelSin.classList.remove('hidden');
+            return;
+        }
+
+        panelPendientes.classList.remove('hidden');
+        panelSin.classList.add('hidden');
+
+        listaFormularios.innerHTML = formulariosPendientes.map(f => `
+            <div class="info-card" style="margin-bottom: 12px; padding: 12px; border-left: 4px solid #0033a0;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                    <div>
+                        <p style="font-weight: bold; color: var(--gob-azul); margin-bottom: 4px;">📋 ${f.idFolio}</p>
+                        <p style="font-size: 0.8rem;"><strong>Patente:</strong> ${f.patenteVisual || f.patente}</p>
+                        <p style="font-size: 0.8rem;"><strong>Vehículo:</strong> ${f.marca} ${f.modelo}</p>
+                        <p style="font-size: 0.8rem;"><strong>Menores:</strong> ${f.llevaMenores}</p>
+                        <p style="font-size: 0.8rem;"><strong>SAG:</strong> ${f.declaracionSag}</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">🕐 ${f.fechaRegistro}</p>
+                    </div>
+                    <span class="badge" style="background: #fbbf24; color: #78350f;">Pendiente</span>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 10px;">
+                    <button class="btn-accept-form" data-folio="${f.idFolio}" style="flex: 1; padding: 8px; background: #2ecc71; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem;">
+                        ✓ Aceptar
+                    </button>
+                    <button class="btn-reject-form" data-folio="${f.idFolio}" style="flex: 1; padding: 8px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem;">
+                        ✗ Rechazar
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        // Agregar eventos a los botones de aceptar y rechazar
+        document.querySelectorAll('.btn-accept-form').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const folio = btn.getAttribute('data-folio');
+                aceptarFormulario(folio);
+            });
+        });
+
+        document.querySelectorAll('.btn-reject-form').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const folio = btn.getAttribute('data-folio');
+                rechazarFormulario(folio);
+            });
+        });
+    }
+
+    function aceptarFormulario(folio) {
+        const formulario = JSON.parse(localStorage.getItem(folio));
+        formulario.estado = "Aprobado";
+        localStorage.setItem(folio, JSON.stringify(formulario));
+        cargarFormulariosPendientes();
+    }
+
+    function rechazarFormulario(folio) {
+        const formulario = JSON.parse(localStorage.getItem(folio));
+        formulario.estado = "Rechazado";
+        localStorage.setItem(folio, JSON.stringify(formulario));
+        cargarFormulariosPendientes();
+    }
+
     if (checkboxMenores) {
         checkboxMenores.addEventListener('change', (e) => sectionMenoresDetalle.classList.toggle('hidden', !e.target.checked));
     }
     if (checkboxSag) {
         checkboxSag.addEventListener('change', (e) => sectionSagDetalle.classList.toggle('hidden', !e.target.checked));
+    }
+    if (checkboxTieneInformeTec) {
+        checkboxTieneInformeTec.addEventListener('change', (e) => sectionInformeTec.classList.toggle('hidden', !e.target.checked));
+    }
+    if (checkboxExtSag) {
+        checkboxExtSag.addEventListener('change', (e) => sectionExtSagDetalle.classList.toggle('hidden', !e.target.checked));
     }
 
     // --- NOTIFICACIONES PUSH SIMULADAS ---

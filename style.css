@@ -251,7 +251,8 @@ button:active:not(:disabled) { transform: scale(0.96) !important; }
 /* ELEMENTOS DEL FORMULARIO */
 .form-group { margin-bottom: 12px; display: flex; flex-direction: column; }
 .form-group label { font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
-.form-group input, .form-group select, .scanner-box input { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; background-color: var(--input-bg); color: var(--text-main); }
+.form-group input, .form-group select, .form-group textarea, .scanner-box input { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; background-color: var(--input-bg); color: var(--text-main); }
+.form-group textarea { resize: vertical; min-height: 80px; font-family: inherit; line-height: 1.5; }
 .check-group { flex-direction: row; align-items: center; gap: 8px; margin: 10px 0; }
 .hidden-fields { background-color: var(--field-hidden-bg); padding: 12px; border-radius: 8px; margin-bottom: 12px; }
 .hidden { display: none !important; }
@@ -269,6 +270,36 @@ button:active:not(:disabled) { transform: scale(0.96) !important; }
 .sag-section-title { font-size: 0.85rem; font-weight: bold; color: #2ecc71; border-left: 3px solid #2ecc71; padding-left: 6px; margin-top: 15px; margin-bottom: 5px; }
 .sag-alert-border { border-left: 4px solid #ef3340; }
 .sag-warning-label { font-weight: bold; color: #ef3340; display: block; margin-bottom: 8px; font-size: 0.75rem;}
+
+/* PAPELES DEL VEHÍCULO SECTION */
+.docs-section-title { font-size: 0.85rem; font-weight: bold; color: var(--gob-azul); border-left: 3px solid var(--gob-azul); padding-left: 6px; margin-top: 15px; margin-bottom: 8px; }
+
+/* ESTILOS PARA INPUTS DE ARCHIVO */
+.form-group input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    border: 2px dashed var(--border-color);
+    border-radius: 6px;
+    background-color: var(--field-hidden-bg);
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.form-group input[type="file"]:hover {
+    border-color: var(--gob-azul);
+    background-color: var(--input-bg);
+}
+
+.form-group input[type="file"]:focus {
+    outline: none;
+    border-color: var(--gob-azul);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.file-info { font-size: 0.65rem; color: var(--text-muted); display: block; margin-top: 4px; }
 
 /* QR CODES */
 .qr-wrapper { text-align: center; margin: 20px 0; }
@@ -357,3 +388,29 @@ button:active:not(:disabled) { transform: scale(0.96) !important; }
 .btn-help { background: none; border: none; font-size: 0.75rem; cursor: pointer; }
 .help-section { text-align: center; margin-top: 15px; font-size: 0.8rem; }
 .help-section a { color: var(--gob-azul); text-decoration: none; font-weight: bold; }
+
+/* SECCIÓN DE REVISIÓN DE FORMULARIOS */
+.form-review-list { display: flex; flex-direction: column; gap: 10px; }
+
+.btn-accept-form, .btn-reject-form {
+    transition: all 0.2s ease;
+}
+
+.btn-accept-form:hover {
+    background: #27ae60 !important;
+    transform: translateY(-1px);
+}
+
+.btn-reject-form:hover {
+    background: #c0392b !important;
+    transform: translateY(-1px);
+}
+
+.badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+.badge-orange { background: #fb923c; color: white; }
+
+.scrollable-screen { overflow-y: auto; }
+
+.text-center { text-align: center; }
+.text-muted { color: var(--text-muted); }
+.text-right { text-align: right; }

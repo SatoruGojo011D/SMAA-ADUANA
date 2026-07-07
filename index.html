@@ -39,79 +39,23 @@
             <section id="screen-login" class="screen active">
                 <div class="welcome-box">
                     <h2>Sistema de Control Fronterizo</h2>
-                    <p>Seleccione su perfil e ingrese sus credenciales para acceder al SMAA.</p>
+                    <p>Acceso al Sistema de Modernización y Agilización Aduanera (SMAA)</p>
                 </div>
+
+                <div class="form-group">
+                    <label for="login-nombre">Nombre o Usuario (Opcional)</label>
+                    <input type="text" id="login-nombre" placeholder="Ingrese su nombre">
+                </div>
+
+                <button id="btn-acceder-simple" class="btn-cu" style="margin-top: 15px;">
+                    ✓ Acceder al Formulario
+                </button>
+
+                <button id="btn-revisar-formularios" class="btn-secondary" style="margin-top: 10px; width: 100%;">
+                    📋 Revisar Formularios Pendientes
+                </button>
                 
-                <div class="auth-tabs">
-                    <button id="tab-ciudadano" class="auth-tab active">Ciudadano</button>
-                    <button id="tab-institucional" class="auth-tab">Funcionario</button>
-                </div>
-
-                <div id="form-auth-ciudadano" class="auth-form-container">
-                    <div class="cu-banner">
-                        <span class="cu-logo-mock">ClaveÚnica</span>
-                        <p>Dep. de Tecnologías de la Información</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="login-rut-cu">RUT</label>
-                        <input type="text" id="login-rut-cu" placeholder="12345678-K" maxlength="10">
-                    </div>
-                    <div class="form-group">
-                        <label for="login-pass-cu">ClaveÚnica</label>
-                        <div class="input-password-wrapper">
-                            <input type="password" id="login-pass-cu" placeholder="••••••••">
-                            <button type="button" class="btn-toggle-password" data-target="login-pass-cu">👁️</button>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group check-group flex-row justify-between">
-                        <div class="flex-align-center">
-                            <input type="checkbox" id="remember-rut">
-                            <label for="remember-rut" style="margin-bottom:0; font-size:0.75rem; color:var(--text-muted);">Recordar mi RUT</label>
-                        </div>
-                    </div>
-
-                    <button id="btn-submit-cu" class="btn-cu">
-                        🔑 Iniciar sesión con ClaveÚnica
-                    </button>
-                </div>
-
-                <div id="form-auth-institucional" class="auth-form-container hidden">
-                    <div class="cu-banner corporate-banner">
-                        <span class="cu-logo-mock">Aduanas Chile</span>
-                        <p>Autenticación de Operadores e Inspectores</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="login-id-inst">ID de Funcionario / Código Operador</label>
-                        <input type="text" id="login-id-inst" placeholder="Ej: ADU-9482" maxlength="12">
-                    </div>
-                    <div class="form-group">
-                        <label for="login-pass-inst">PIN / Clave de Seguridad</label>
-                        <div class="input-password-wrapper">
-                            <input type="password" id="login-pass-inst" placeholder="••••••••">
-                            <button type="button" class="btn-toggle-password" data-target="login-pass-inst">👁️</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="login-perfil-inst">Rol de Gestión</label>
-                        <select id="login-perfil-inst">
-                            <option value="funcionario">Fiscalizador de Caseta</option>
-                            <option value="director">Director / Panel de Control KPIs</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group check-group">
-                        <input type="checkbox" id="remember-id">
-                        <label for="remember-id" style="margin-bottom:0; font-size:0.75rem; color:var(--text-muted);">Recordar Credenciales</label>
-                    </div>
-
-                    <button id="btn-submit-inst" class="btn-func">
-                        👤 Verificar Credenciales Internas
-                    </button>
-                </div>
-                
-                <div class="help-section">
+                <div class="help-section" style="margin-top: 20px;">
                     <small>¿Extranjero sin RUT? <a href="#" id="link-extranjero">Solicite acceso temporal</a></small>
                 </div>
             </section>
@@ -153,10 +97,48 @@
                         <input type="text" id="ext-modelo" required placeholder="Ej: Ranger">
                     </div>
 
+                    <div class="docs-section-title">📄 Papeles del Vehículo</div>
+                    
+                    <div class="form-group">
+                        <label for="ext-doc-certificado">Certificado de Registro Vigente</label>
+                        <input type="file" id="ext-doc-certificado" accept=".pdf, .jpg, .png" required>
+                        <small class="file-info">PDF, JPG o PNG | Máx. 5MB</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ext-doc-permiso">Permiso de Circulación</label>
+                        <input type="file" id="ext-doc-permiso" accept=".pdf, .jpg, .png" required>
+                        <small class="file-info">PDF, JPG o PNG | Máx. 5MB</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ext-doc-seguro">Póliza de Seguro / Cobertura Internacional</label>
+                        <input type="file" id="ext-doc-seguro" accept=".pdf, .jpg, .png" required>
+                        <small class="file-info">PDF, JPG o PNG | Máx. 5MB</small>
+                    </div>
+
                     <div class="sag-section-title">Declaración Obligatoria SAG / ADUANA</div>
                     <div class="form-group check-group">
                         <input type="checkbox" id="ext-sag" name="ext-sag">
                         <label for="ext-sag">¿Ingresa mercancías, alimentos o vegetales?</label>
+                    </div>
+
+                    <div id="section-ext-sag-detalle" class="hidden-fields hidden sag-alert-border">
+                        <label class="sag-warning-label">
+                            ⚠️ ATENCIÓN: Pasará obligatoriamente a revisión física en el andén del SAG.
+                        </label>
+                        <div class="form-group">
+                            <label for="ext-sag-tipo">Tipo de producto</label>
+                            <select id="ext-sag-tipo">
+                                <option value="Vegetal">Frutas, semillas, plantas o maderas</option>
+                                <option value="Animal">Carnes, lácteos, embutidos o miel</option>
+                                <option value="Otro">Otros productos restringidos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ext-sag-descripcion">📝 Descripción Detallada del Producto</label>
+                            <textarea id="ext-sag-descripcion" placeholder="Especifique qué tipo de producto es, cantidad aproximada, marcas, país de origen, etc. Ej: 40 kg de carne de vacuno fresco, marca 'Estancia Argentina', procedencia: Buenos Aires" rows="4"></textarea>
+                        </div>
                     </div>
 
                     <div id="api-status-ext" class="status-box hidden"></div>
@@ -195,6 +177,39 @@
                         <input type="text" id="modelo" required placeholder="Ej: RAV4">
                     </div>
 
+                    <div class="docs-section-title">📄 Papeles del Vehículo</div>
+                    
+                    <div class="form-group">
+                        <label for="doc-certificado">Certificado de Registro Vigente</label>
+                        <input type="file" id="doc-certificado" accept=".pdf, .jpg, .png" required>
+                        <small class="file-info">PDF, JPG o PNG | Máx. 5MB</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="doc-permiso">Permiso de Circulación</label>
+                        <input type="file" id="doc-permiso" accept=".pdf, .jpg, .png" required>
+                        <small class="file-info">PDF, JPG o PNG | Máx. 5MB</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="doc-seguro">Seguro Obligatorio (SOAP)</label>
+                        <input type="file" id="doc-seguro" accept=".pdf, .jpg, .png" required>
+                        <small class="file-info">PDF, JPG o PNG | Máx. 5MB</small>
+                    </div>
+
+                    <div class="form-group check-group">
+                        <input type="checkbox" id="tiene-informe-tec" name="tiene-informe-tec">
+                        <label for="tiene-informe-tec">¿Posee Informe Técnico de Revisión?</label>
+                    </div>
+
+                    <div id="section-informe-tec" class="hidden-fields hidden">
+                        <div class="form-group">
+                            <label for="doc-informe-tec">Adjuntar Informe Técnico</label>
+                            <input type="file" id="doc-informe-tec" accept=".pdf, .jpg, .png">
+                            <small class="file-info">PDF, JPG o PNG | Máx. 5MB</small>
+                        </div>
+                    </div>
+
                     <div class="form-group check-group">
                         <input type="checkbox" id="menores" name="menores">
                         <label for="menores">¿Viaja con menores de edad?</label>
@@ -229,6 +244,10 @@
                                 <option value="Otro">Otros productos restringidos</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="sag-descripcion">📝 Descripción Detallada del Producto</label>
+                            <textarea id="sag-descripcion" placeholder="Especifique qué tipo de producto es, cantidad aproximada, marcas, etc. Ej: 50 kg de manzanas Golden, marca 'Huerto del Sur', procedencia: Región del Maule" rows="4"></textarea>
+                        </div>
                     </div>
 
                     <div id="api-status" class="status-box hidden"></div>
@@ -242,9 +261,9 @@
 
             <section id="screen-qr" class="screen">
                 <div class="success-header">
-                    <span class="success-icon">✓</span>
-                    <h2>Trámite Aprobado</h2>
-                    <p>Datos validados con Registro Civil, PDI y SAG.</p>
+                    <span class="success-icon">⏳</span>
+                    <h2>Trámite en Espera</h2>
+                    <p>Su solicitud ha sido registrada y está en revisión.</p>
                 </div>
 
                 <div class="qr-wrapper">
@@ -254,7 +273,34 @@
                     <p class="qr-code-text">ID Folio: <span id="folio-id">000000</span></p>
                 </div>
                 
+                <div class="info-card" style="background-color: #fef3c7; border: 1px solid #f59e0b; margin: 15px 0;">
+                    <p style="color: #92400e; font-size: 0.8rem;"><strong>📋 Estado:</strong> Pendiente de Revisión</p>
+                    <p style="color: #92400e; font-size: 0.75rem; margin-top: 8px;">El equipo de aduanas revisará su documentación en los próximos minutos.</p>
+                </div>
+                
                 <button id="btn-restart" class="btn-secondary">Volver al Inicio</button>
+            </section>
+
+            <section id="screen-revisar" class="screen scrollable-screen">
+                <div class="dashboard-header">
+                    <h2>📝 Revisar Formularios</h2>
+                    <span class="badge">Pendientes de Aprobación</span>
+                </div>
+
+                <div id="panel-formularios-pendientes" class="hidden">
+                    <div id="lista-formularios" class="form-review-list">
+                        <div class="info-card">
+                            <p class="text-center text-muted">Cargando formularios pendientes...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="panel-sin-formularios" class="info-card">
+                    <p class="text-center"><strong>✓ No hay formularios pendientes</strong></p>
+                    <p class="text-center text-muted" style="font-size: 0.8rem;">Todos los formularios han sido revisados.</p>
+                </div>
+
+                <button id="btn-logout-revisar" class="btn-secondary margin-top-auto">Volver</button>
             </section>
 
             <section id="screen-dashboard" class="screen scrollable-screen">
